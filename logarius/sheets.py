@@ -15,7 +15,7 @@ def run(name: str) -> None:
 
 
 def _get_spreadsheet() -> gspread.Spreadsheet:
-    service_account = gspread.service_account()
+    service_account = gspread.service_account() # Moved generated credential file to ~/.config/gspread/service_account.json
     return service_account.open(SPREADSHEET_NAME)
 
 
