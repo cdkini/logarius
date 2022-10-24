@@ -1,4 +1,5 @@
 import json
+import sys
 from typing import List
 
 import click
@@ -30,6 +31,11 @@ def _get_worksheet(
     try:
         return spreadsheet.worksheet(category)
     except gspread.exceptions.WorksheetNotFound:
+        confirmation = input(
+            f"No worksheet named '{category}' found; do you want to create a new one (y/N): "
+        )
+        if confirmation.lower() == "n":
+            sys.exit(0)
         return spreadsheet.add_worksheet(title=category, rows=1000, cols=1000)
 
 
