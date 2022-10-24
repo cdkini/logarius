@@ -1,4 +1,5 @@
 import json
+from typing import List
 
 import click
 import gspread
@@ -7,15 +8,19 @@ import pandas as pd
 SPREADSHEET_NAME = "logarius"
 
 
-def run(name: str) -> None:
-    spreadsheet = _get_spreadsheet()
-    worksheet = _get_worksheet(spreadsheet=spreadsheet, category=name.lower())
+def list_categories(spreadsheet: gspread.Spreadsheet) -> List[str]:
+    return [ws.title for ws in spreadsheet.worksheets()]
+
+
+def record_new_entry(spreadsheet: gspread.Spreadsheet, category: str) -> None:
+    worksheet = _get_worksheet(spreadsheet=spreadsheet, category=category)
     df = _init_dataframe(worksheet)
     _record_entry(df=df, worksheet=worksheet)
 
 
-def _get_spreadsheet() -> gspread.Spreadsheet:
-    service_account = gspread.service_account() # Moved generated credential file to ~/.config/gspread/service_account.json
+def get_spreadsheet() -> gspread.Spreadsheet:
+    # Moved generated credential file to ~/.config/gspread/service_account.json
+    service_account = gspread.service_account()
     return service_account.open(SPREADSHEET_NAME)
 
 
